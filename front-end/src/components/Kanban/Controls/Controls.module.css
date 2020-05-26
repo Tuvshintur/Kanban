@@ -1,0 +1,18 @@
+.Controls {
+    padding: 1rem;
+    background-color: "#D6F3FF";
+}
+.Flex {
+    display: flex;
+}
+.FS_1 {
+    font-size: 1rem;
+}
+
+.Ml_1 {
+    margin-left: 1rem;
+}
+
+.Mt_1 {
+    margin-top: 1rem;
+}

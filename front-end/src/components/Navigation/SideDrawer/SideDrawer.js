@@ -2,12 +2,14 @@ import React from "react";
 
 import BackDrop from "../../UI/BackDrop/BackDrop";
 import Logo from "../../Logo/Logo";
-import "./SideDrawer.css";
+import NavigationItems from "../NavigationItems/NavigationItems";
+
+import styles from "./SideDrawer.module.css";
 
 const sideDrawer = (props) => {
-    let classes = ["SideDrawer", "Close"];
+    let classes = [styles.SideDrawer, styles.Close];
     if (props.open) {
-        classes = ["SideDrawer", "Open"];
+        classes = [styles.SideDrawer, styles.Open];
     }
 
     return (
@@ -17,7 +19,7 @@ const sideDrawer = (props) => {
                 <div className="Logo">
                     <Logo />
                 </div>
-                <nav>{/* <NavigationItems /> */}</nav>
+                <nav>{<NavigationItems />}</nav>
             </div>
         </React.Fragment>
     );

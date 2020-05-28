@@ -5,7 +5,6 @@ import Stage from "../Stage/Stage";
 const Board = ({ stagesNames, stagesTasks, onTaskSelectHandler }) => {
     return (
         <div>
-            <h1>Kanban board</h1>
             <div
                 style={{
                     display: "flex",

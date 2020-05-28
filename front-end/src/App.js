@@ -3,7 +3,7 @@ import { Switch, Route } from "react-router-dom";
 
 import KanbanBoard from "./components/Containers/KanbanBoard/KanbanBoard";
 
-import Layout from "./components/Containers/Layout/Layout";
+import Layout from "./components/Hoc/Layout/Layout";
 
 class App extends Component {
     render() {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Aux from "../../Hoc/Auxiliary";
+import Aux from "../Auxiliary/Auxiliary";
 import SideDrawer from "../../Navigation/SideDrawer/SideDrawer";
 import Toolbar from "../../Navigation/ToolBar/Toolbar";
 

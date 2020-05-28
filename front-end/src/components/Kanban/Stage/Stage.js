@@ -1,17 +1,11 @@
 import React from "react";
+import styles from "./Stage.module.css";
 
 import Task from "../Task/Task";
 
 const Stage = ({ name, tasks, onTaskSelectHandler }) => {
     return (
-        <div
-            style={{
-                flexGrow: 1,
-                margin: "1rem",
-                paddingBottom: "1rem",
-                background: "#fafafa",
-            }}
-        >
+        <div className={styles.Stage}>
             <h2>{name}</h2>
             <div>
                 {tasks.map((task) => (

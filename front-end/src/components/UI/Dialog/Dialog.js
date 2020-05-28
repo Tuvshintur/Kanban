@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import styles from "./Dialog.module.css";
-import Backdrop from "../Backdrop/Backdrop";
+import Backdrop from "../BackDrop/BackDrop";
 
 class Dialog extends Component {
     shouldComponentUpdate(nextProps, nextState) {

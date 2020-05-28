@@ -1,54 +1,51 @@
 import React from "react";
 
+import Input from "../../UI/Input/Input";
+import Button from "../../UI/Button/Button";
 import styles from "./Controls.module.css";
 
 const Controls = (props) => {
+    const state = {
+        inputTask: {
+            elementType: "input",
+            elementConfig: {
+                type: "text",
+                placeholder: "New Task",
+            },
+        },
+        selectedTask: {
+            elementType: "input",
+            elementConfig: {
+                type: "text",
+                placeholder: "Selected task name",
+                readOnly: true,
+            },
+        },
+    };
+
     return (
         <div className={styles.Controls}>
             <h1>Controls</h1>
             <div className={styles.Flex}>
-                <input
-                    placeholder="New task name"
-                    className={styles.FS_1}
-                    onChange={props.onChangeInput}
+                <Input
+                    elementType={state.inputTask.elementType}
+                    elementConfig={state.inputTask.elementConfig}
                     value={props.createInputValue}
+                    changed={props.onChangeInput}
                 />
-                <button
-                    className={styles.Ml_1}
-                    disabled={props.createInputValue === ""}
-                    onClick={props.onCreateHandler}
-                >
+                <Button btnType="Success" disabled={props.createInputValue === ""} clicked={props.onCreateHandler}>
                     Create
-                </button>
+                </Button>
             </div>
             <div className={[styles.Mt_1, styles.Flex].join(" ")}>
-                <input
-                    readOnly
-                    placeholder="Selected task name"
-                    className={styles.FS_1}
+                <Input
+                    elementType={state.selectedTask.elementType}
+                    elementConfig={state.selectedTask.elementConfig}
                     value={props.selectedInputValue}
                 />
-                <button
-                    className={styles.Ml_1}
-                    disabled={props.selectedInputValue === ""}
-                    onClick={props.onMoveBackHandler}
-                >
-                    Move back
-                </button>
-                <button
-                    className={styles.Ml_1}
-                    disabled={props.selectedInputValue === ""}
-                    onClick={props.onMoveForwardHandler}
-                >
-                    Move forward
-                </button>
-                <button
-                    className={styles.Ml_1}
-                    disabled={props.selectedInputValue === ""}
-                    onClick={props.onDeleteHandler}
-                >
+                <Button btnType="Danger" disabled={props.selectedInputValue === ""} clicked={props.onDeleteHandler}>
                     Delete
-                </button>
+                </Button>
             </div>
         </div>
     );

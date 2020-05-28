@@ -13,8 +13,6 @@ const kanban = (props) => {
                 onChangeInput={props.onChangeInput}
                 createInputValue={props.createInputValue}
                 selectedInputValue={props.selectedInputValue}
-                onMoveBackHandler={props.onMoveBackHandler}
-                onMoveForwardHandler={props.onMoveForwardHandler}
                 onDeleteHandler={props.onDeleteHandler}
             />
             <Board

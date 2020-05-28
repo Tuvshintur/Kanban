@@ -1,25 +1,16 @@
 import React, { Component } from "react";
 
 import Kanban from "../../Kanban/Kanban";
+import { connect } from "react-redux";
+import * as actions from "../../../store/actions/index";
+import withErrorHandler from "../../Hoc/withErrorHandler/withErrorHandler";
+import axios from "../../../axios-custom";
 
 const NUM_STAGES = 4;
 
 class KanbanBoard extends Component {
     state = {
         createInputValue: "",
-        selectedInputValue: "",
-        tasks: [
-            { name: "task 0", stage: 0 },
-            { name: "task 1", stage: 0 },
-            { name: "task 2", stage: 0 },
-            { name: "task 3", stage: 0 },
-            { name: "task 4", stage: 1 },
-            { name: "task 5", stage: 1 },
-            { name: "task 6", stage: 1 },
-            { name: "task 7", stage: 2 },
-            { name: "task 8", stage: 2 },
-            { name: "task 9", stage: 3 },
-        ],
     };
 
     stagesNames = ["Backlog", "To Do", "Ongoing", "Done"];
@@ -31,47 +22,27 @@ class KanbanBoard extends Component {
     };
 
     onCreateHandler = () => {
-        const { createInputValue, tasks } = this.state;
-        this.setState({
-            tasks: [...tasks, { name: createInputValue, stage: 0 }],
-            createInputValue: "",
-        });
+        const { createInputValue } = this.state;
+        this.props.onTaskAdded(createInputValue);
+        this.setState({ createInputValue: "" });
     };
 
-    onTaskSelectHandler = (value) => {
-        this.setState({ selectedInputValue: value });
-    };
-
-    onMoveBackHandler = () => {
-        const { tasks, selectedInputValue } = this.state;
-        tasks.map((t) => {
-            return t.name === selectedInputValue && t.stage > 0 ? t.stage-- : t;
-        });
-        console.log(tasks);
-        this.setState({ tasks: tasks });
-    };
-
-    onMoveForwardHandler = () => {
-        const { tasks, selectedInputValue } = this.state;
-        tasks.map((t) => {
-            return t.name === selectedInputValue && t.stage < NUM_STAGES - 1 ? t.stage++ : t;
-        });
-        this.setState({ tasks: tasks });
+    onTaskSelectHandler = (name) => {
+        this.props.onSelectTask(name);
     };
 
     onDeleteHandler = () => {
-        const { tasks, selectedInputValue } = this.state;
-        this.setState({ tasks: tasks.filter((t) => t.name !== selectedInputValue), selectedInputValue: "" });
+        this.props.onTaskDeleted();
     };
 
     render() {
-        const { tasks, createInputValue, selectedInputValue } = this.state;
+        const { createInputValue } = this.state;
 
         let stagesTasks = [];
         for (let i = 0; i < NUM_STAGES; ++i) {
             stagesTasks.push([]);
         }
-        for (let task of tasks) {
+        for (let task of this.props.tasks) {
             const stageId = task.stage;
             stagesTasks[stageId].push(task);
         }
@@ -84,10 +55,8 @@ class KanbanBoard extends Component {
                     onCreateHandler={this.onCreateHandler}
                     onChangeInput={this.onChangeInput}
                     createInputValue={createInputValue}
-                    selectedInputValue={selectedInputValue}
+                    selectedInputValue={this.props.selectedTask}
                     onTaskSelectHandler={this.onTaskSelectHandler}
-                    onMoveForwardHandler={this.onMoveForwardHandler}
-                    onMoveBackHandler={this.onMoveBackHandler}
                     onDeleteHandler={this.onDeleteHandler}
                 />
             </React.Fragment>
@@ -95,4 +64,21 @@ class KanbanBoard extends Component {
     }
 }
 
-export default KanbanBoard;
+const mapStateToProps = (state) => {
+    return {
+        tasks: state.task.tasks,
+        error: state.task.error,
+        selectedTask: state.task.selectedTask,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onTaskAdded: (name) => dispatch(actions.addTask(name)),
+        onTaskDeleted: () => dispatch(actions.deleteTask()),
+        onInitTasks: () => dispatch(actions.initTasks()),
+        onSelectTask: (name) => dispatch(actions.selectTask(name)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(KanbanBoard, axios));

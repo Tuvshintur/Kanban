@@ -1,15 +1,9 @@
 import React from "react";
+import styles from "./Task.module.css";
 
 const Task = ({ name, onTaskSelectHandler }) => {
     return (
-        <div
-            onClick={(event) => onTaskSelectHandler(name)}
-            style={{
-                padding: "1rem",
-                border: "1px solid #ccc",
-                margin: "1rem 1rem 0 1rem",
-            }}
-        >
+        <div className={styles.Task} onClick={() => onTaskSelectHandler(name)}>
             {name}
         </div>
     );

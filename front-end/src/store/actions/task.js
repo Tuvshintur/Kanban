@@ -1,12 +1,13 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-custom";
 
-export const addTask = (name) => {
+export const addTask = (name, newId) => {
     return {
         type: actionTypes.ADD_TASK,
         newTask: {
             name: name,
             stage: 0,
+            id: newId,
         },
     };
 };
@@ -30,10 +31,10 @@ export const setTask = (tasks) => {
     };
 };
 
-export const selectTask = (name) => {
+export const selectTask = (id) => {
     return {
         type: actionTypes.SELECT_TASK,
-        name: name,
+        id: id,
     };
 };
 
@@ -47,5 +48,26 @@ export const initTasks = () => {
             .catch(() => {
                 dispatch(fetchTasksFail());
             });
+    };
+};
+
+export const startDragTask = (taskId) => {
+    return {
+        type: actionTypes.START_DRAG_TASK,
+        taskId: taskId,
+    };
+};
+
+export const dropTask = (stageId, taskId) => {
+    return {
+        type: actionTypes.DROP_TASK,
+        stageId: stageId,
+        taskId: taskId,
+    };
+};
+
+export const endDragTask = () => {
+    return {
+        type: actionTypes.END_DRAG_TASK,
     };
 };

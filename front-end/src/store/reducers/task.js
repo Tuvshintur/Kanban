@@ -2,20 +2,10 @@ import * as actionType from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {
-    tasks: [
-        { name: "task 0", stage: 0 },
-        { name: "task 1", stage: 0 },
-        { name: "task 2", stage: 0 },
-        { name: "task 3", stage: 0 },
-        { name: "task 4", stage: 1 },
-        { name: "task 5", stage: 1 },
-        { name: "task 6", stage: 1 },
-        { name: "task 7", stage: 2 },
-        { name: "task 8", stage: 2 },
-        { name: "task 9", stage: 3 },
-    ],
+    tasks: [],
     selectedTask: "",
     error: false,
+    dragging: -1,
 };
 
 const addTask = (state, action) => {
@@ -24,7 +14,7 @@ const addTask = (state, action) => {
 
 const deleteTask = (state, action) => {
     const { tasks, selectedTask } = state;
-    return updateObject(state, { tasks: tasks.filter((t) => t.name !== selectedTask), selectedTask: "" });
+    return updateObject(state, { tasks: tasks.filter((t) => t.id !== selectedTask), selectedTask: "" });
 };
 
 const setTask = (state, action) => {
@@ -35,11 +25,29 @@ const setTask = (state, action) => {
 };
 
 const selectTask = (state, action) => {
-    return updateObject(state, { selectedTask: action.name });
+    return updateObject(state, { selectedTask: action.id });
 };
 
 const fetchTasksFail = (state, action) => {
     return updateObject(state, { error: true });
+};
+
+const startDragTask = (state, action) => {
+    return updateObject(state, { dragging: action.taskId });
+};
+
+const dropTask = (state, action) => {
+    const { tasks } = state;
+    const indexOfTask = tasks.findIndex((t) => t.id === action.taskId);
+    console.log(indexOfTask);
+    const updatedTask = updateObject(tasks[indexOfTask], { stage: action.stageId });
+    console.log(updatedTask);
+    const updatedTasks = [...tasks.slice(0, indexOfTask), updatedTask, ...tasks.slice(indexOfTask + 1)];
+    return updateObject(state, { tasks: updatedTasks });
+};
+
+const endDragTask = (state, action) => {
+    return updateObject(state, { dragging: -1 });
 };
 
 const taskReducer = (state = initialState, action) => {
@@ -54,6 +62,12 @@ const taskReducer = (state = initialState, action) => {
             return selectTask(state, action);
         case actionType.FETCH_TASK_FAIL:
             return fetchTasksFail(state, action);
+        case actionType.START_DRAG_TASK:
+            return startDragTask(state, action);
+        case actionType.DROP_TASK:
+            return dropTask(state, action);
+        case actionType.END_DRAG_TASK:
+            return endDragTask(state, action);
         default:
             return state;
     }

@@ -14,6 +14,10 @@ class KanbanBoard extends Component {
     };
 
     stagesNames = ["Backlog", "To Do", "Ongoing", "Done"];
+    dropEffect = "move";
+    componentDidMount() {
+        this.props.onInitTasks();
+    }
 
     onChangeInput = (event) => {
         this.setState({
@@ -23,16 +27,37 @@ class KanbanBoard extends Component {
 
     onCreateHandler = () => {
         const { createInputValue } = this.state;
-        this.props.onTaskAdded(createInputValue);
+        this.props.onTaskAdded(createInputValue, new Date().getTime());
         this.setState({ createInputValue: "" });
     };
 
-    onTaskSelectHandler = (name) => {
-        this.props.onSelectTask(name);
+    onTaskSelectHandler = (id) => {
+        this.props.onSelectTask(id);
     };
 
     onDeleteHandler = () => {
         this.props.onTaskDeleted();
+    };
+
+    onTaskDragStartHandler = (event, taskId) => {
+        this.props.onStartDragTask();
+        event.dataTransfer.setData("taskId", taskId);
+        event.dataTransfer.effectAllowed = this.dropEffect;
+        // if (image.current) {
+        //     event.dataTransfer.setDragImage(image.current, 0, 0);
+        // }
+        console.log(event.dataTransfer.getData("taskId"));
+    };
+
+    onTaskDropHandler = (event, stageId) => {
+        const taskId = Number(event.dataTransfer.getData("taskId"));
+        if (taskId) {
+            this.props.onDropTask(stageId, taskId);
+        }
+    };
+
+    onTaskDragEndHandler = () => {
+        this.props.onEndDragTask();
     };
 
     render() {
@@ -42,9 +67,11 @@ class KanbanBoard extends Component {
         for (let i = 0; i < NUM_STAGES; ++i) {
             stagesTasks.push([]);
         }
-        for (let task of this.props.tasks) {
-            const stageId = task.stage;
-            stagesTasks[stageId].push(task);
+        if (this.props.tasks) {
+            for (let task of this.props.tasks) {
+                const stageId = task.stage;
+                stagesTasks[stageId].push(task);
+            }
         }
 
         return (
@@ -58,6 +85,11 @@ class KanbanBoard extends Component {
                     selectedInputValue={this.props.selectedTask}
                     onTaskSelectHandler={this.onTaskSelectHandler}
                     onDeleteHandler={this.onDeleteHandler}
+                    onTaskDragStartHandler={this.onTaskDragStartHandler}
+                    dragging={this.props.dragging}
+                    onTaskDragEndHandler={this.onTaskDragEndHandler}
+                    onTaskDropHandler={this.onTaskDropHandler}
+                    dropEffect={this.dropEffect}
                 />
             </React.Fragment>
         );
@@ -69,15 +101,19 @@ const mapStateToProps = (state) => {
         tasks: state.task.tasks,
         error: state.task.error,
         selectedTask: state.task.selectedTask,
+        dragging: state.task.dragging,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onTaskAdded: (name) => dispatch(actions.addTask(name)),
+        onTaskAdded: (name, newId) => dispatch(actions.addTask(name, newId)),
         onTaskDeleted: () => dispatch(actions.deleteTask()),
         onInitTasks: () => dispatch(actions.initTasks()),
-        onSelectTask: (name) => dispatch(actions.selectTask(name)),
+        onSelectTask: (id) => dispatch(actions.selectTask(id)),
+        onStartDragTask: () => dispatch(actions.startDragTask()),
+        onEndDragTask: () => dispatch(actions.endDragTask()),
+        onDropTask: (stageId, taskId) => dispatch(actions.dropTask(stageId, taskId)),
     };
 };
 

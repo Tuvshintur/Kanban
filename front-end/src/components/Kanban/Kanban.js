@@ -19,6 +19,11 @@ const kanban = (props) => {
                 stagesTasks={props.stagesTasks}
                 stagesNames={props.stagesNames}
                 onTaskSelectHandler={props.onTaskSelectHandler}
+                dragging={props.dragging}
+                onTaskDragStartHandler={props.onTaskDragStartHandler}
+                onTaskDragEndHandler={props.onTaskDragEndHandler}
+                onTaskDropHandler={props.onTaskDropHandler}
+                dropEffect={props.dropEffect}
             />
         </div>
     );

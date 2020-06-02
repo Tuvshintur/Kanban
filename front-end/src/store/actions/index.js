@@ -1,1 +1,1 @@
-export { addTask, initTasks, setTask, deleteTask, selectTask } from "./task";
+export { addTask, initTasks, setTask, deleteTask, selectTask, startDragTask, dropTask, endDragTask } from "./task";
